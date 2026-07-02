@@ -95,7 +95,7 @@ class DiffusionTransformerLayer(nn.Module):
 
     def forward(self, x: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
         # Compute conditioning gating, scaling, and bias
-        # use label and time embeddings to produce per-channel scale/shift 
+        # Use label and time embeddings to produce per-channel scale/shift 
         # parameters that modulate normalized activations
         c = rearrange(self.ada_ln(c), 'b d -> b 1 d') # b 1 d
         attn_scale, attn_bias, attn_gate, ff_scale, ff_bias, ff_gate = c.chunk(6, dim=-1)

@@ -32,10 +32,13 @@ class Depatchifier(nn.Module):
 
 
         self.net = nn.Sequential(
-            # Norm + MLP
+            # Root Mean Square Normalization: RMSNorm(x) = x / sqrt(mean(x^2) + eps)
+            # Cheaper to compute than LayerNorm
             nn.RMSNorm(dim, elementwise_affine=False),
+            # Linear
             MLP([dim, 4*dim, final_dim * patch_size ** 2]), # (b, 64, 160)
 
+            # Reshape
             # Depatchify
             Rearrange("b (h w) (f ph pw) -> b f (h ph) (w pw)", h=h, w=w,
                       f=final_dim, ph=patch_size, pw=patch_size),   # (b, 64, 160) --> (b, 10, 32, 32)
